@@ -13,6 +13,32 @@
 #include "libft.h"
 #include "fillit.h"
 
+int		is_valid_input(char *str, int size_read)
+{
+	int i;
+	int	blocks;
+
+	i = 0;
+	blocks = 0;
+	if (size_read == 21 && str[20] != '\n')
+		return (0);
+	while (i < 20)
+	{
+		if (i % 5 < 4)
+		{
+			if (str[i] != '.' || str[i] != '#')
+				return (0);
+			if (str[i] == "#" && ++blocks > 4)
+				return (0);
+		}
+		else if (str[i] != '\n')
+			return(0);
+		i++;
+	}
+	if (!block_continuity(str))
+		return (0);
+	return (1);
+}
 
 t_list	*read_source(int fd)
 {
