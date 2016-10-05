@@ -13,6 +13,80 @@
 #include "libft.h"
 #include "fillit.h"
 
+void	get_limits(char *str, t_vec min, t_vec max)
+{
+	int i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '#')
+		{
+			if (i % 5 < min->x)
+				min->x = i % 5;
+			if (i % 5 > max->x)
+				max->x = i % 5;
+			if (i / 5 < min->y)
+				min->y = i / 5;
+			if (i / 5 > max->y)
+				max->y = i / 5;
+		}
+		i++;
+	}
+}
+
+t_tet	*get_tetri(char *str, char c)
+{
+	t_vec	*min;
+	t_vec	*max;
+	t_tet	*tetri;
+	char	**pos;
+	int		i;
+
+	min = new_vector(3, 3);
+	max = new_vector(0, 0);
+
+	get_limits(str, min, max);
+	pos = ft_memalloc(sizeof(char *) * max->y - min->y + 1);
+	i = 0;
+	while (i < max->y - min->y + 1)
+	{
+		pos[i] = ft_strnew(max->x - min->x + 1);
+		ft_strncpy(pos[i], (str + min->x + (i + min->y) * 5), (max->x - min->x + 1));
+		i++;
+	}
+	tetri = new_tetri(pos, max->x - min->x + 1, max->y - min->y + 1, c);
+	//free min and max
+	return (tetri);
+}
+
+int		block_continuity(char *str)
+{
+	int i;
+	int cont;
+
+	i = 0;
+	cont = 0;
+	while (str[i])
+	{
+		if (str[i] == '#')
+		{
+			if (i > 0 && str[i - 1] == '#')
+				cont++;
+			if (i < 20 && str[i + 1] == '#')
+				cont++;
+			if (i > 4 && str[i - 5] == '#')
+				cont++;
+			if (i < 15 && str[i + 5] == '#')
+				cont++;
+		}
+		i++;
+	}
+	if (cont == 6 || cont == 8)
+		return (1);
+	return (0);
+}
+
 int		is_valid_input(char *str, int size_read)
 {
 	int i;
