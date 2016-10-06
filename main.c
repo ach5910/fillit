@@ -15,6 +15,7 @@
 
 void	print_list(t_list **list)
 {
+	ft_putendl("In print list");
 	t_list	*link;
 	t_tet	*temp;
 	int		i;
@@ -24,9 +25,9 @@ void	print_list(t_list **list)
 	{
 		temp = link->content;
 		i = 0;
-		while (temp->tab[i])
+		while (i < temp->height)
 		{
-			ft_putstr(temp->tab[i]);
+			ft_putendl(temp->tab[i]);
 			i++;
 		}
 		link = link->next;
@@ -55,7 +56,7 @@ t_vec	*new_vector(int x, int y)
 	return (vector);
 }
 
-void	get_limits(char *str, t_vec *min, t_vec *max)
+void	get_limits(char *str, t_vec *min, t_vec *max, char c)
 {
 	int i;
 
@@ -64,6 +65,7 @@ void	get_limits(char *str, t_vec *min, t_vec *max)
 	{
 		if (str[i] == '#')
 		{
+			str[i] = c;
 			if (i % 5 < min->x)
 				min->x = i % 5;
 			if (i % 5 > max->x)
@@ -88,9 +90,7 @@ t_tet	*get_tetri(char *str, char c)
 	min = new_vector(3, 3);
 	max = new_vector(0, 0);
 
-	ft_putstr(str);
-
-	get_limits(str, min, max);
+	get_limits(str, min, max, c);
 	pos = ft_memalloc(sizeof(char *) * (max->y - min->y + 1));
 	i = 0;
 	while (i < max->y - min->y + 1)
@@ -99,6 +99,12 @@ t_tet	*get_tetri(char *str, char c)
 		ft_strncpy(pos[i], (str + min->x + (i + min->y) * 5), (max->x - min->x + 1));
 		i++;
 	}
+	// i = 0;
+	// while (i < max->y - min->y + 1)
+	// {
+	// 	ft_putendl(pos[i]);
+	// 	i++;
+	// }
 	tetri = new_tetri(pos, max->x - min->x + 1, max->y - min->y + 1, c);
 	//free min and max
 	return (tetri);
