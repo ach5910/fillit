@@ -6,7 +6,7 @@
 /*   By: ahunt <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/04 20:10:24 by ahunt             #+#    #+#             */
-/*   Updated: 2016/10/05 19:04:22 by ahunt            ###   ########.fr       */
+/*   Updated: 2016/10/06 08:23:27 by ahunt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@
 # include <sys/uio.h>
 # include <fcntl.h>
 
-typedef struct			s_grid
+typedef struct			s_map
 {
-	char		**map;
+	char		**grid;
 	int			size;
-}    					t_grid;
+}    					t_map;
 
 typedef struct			s_vec
 {
@@ -38,6 +38,8 @@ typedef struct			s_tet
 	int			width;
 	int			height;
 	char		val;
+	int			x;
+	int			y;
 }						t_tet;
 
 int		main(int argc, char **argv);

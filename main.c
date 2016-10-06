@@ -13,18 +13,340 @@
 #include "libft.h"
 #include "fillit.h"
 
-//this is here for debugging purposes only
-void	print_list(t_list **list)
+t_vec	*new_vector(int x, int y);
+void	print_list(t_list *list);
+
+int		ft_tabcmp(char **s1, char **s2, int height)
+{
+	int i;
+
+	i = 0;
+	while (i < height)
+	{
+		if (ft_strequ(s1[i], s2[i]) == 0)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+t_list	*ft_lstrev(t_list **list)
+{
+	t_list	*next;
+	t_list	*current;
+	t_list	*prev;
+
+	prev = NULL;
+	current = *list;
+	while (current)
+	{
+		next = current->next;
+		current->next = prev;
+		prev = current;
+		current = next;
+	}
+	*list = prev;
+	return(*list);
+}
+
+void	free_tetri(t_tet *tetri)
+{
+	int i;
+
+	i = 0;
+	while (i < tetri->height)
+	{
+		ft_memdel((void **)&(tetri->tab[i]));
+		i++;
+	}
+	ft_memdel((void **)&(tetri->tab));
+	ft_memdel((void **)&tetri);
+}
+
+int		ft_lstcount(t_list *list)
+{
+	if(list->next == NULL)
+		return (1);
+	return (1 + ft_lstcount(list->next));
+}
+
+t_list	*free_list(t_list *list)
+{
+	t_tet	*tetri;
+	t_list	*next;
+
+	while (list)
+	{
+		tetri = (t_tet *)(list->content);
+		free_tetri(tetri);
+		next = list->next;
+		ft_memdel((void **)&list);
+		list = next;
+	}
+	return (NULL);
+}
+
+void	free_map(t_map *map)
+{
+	int i;
+
+	i = 0;
+	while (i < map->size)
+	{
+		ft_memdel((void **)&(map->grid[i]));
+		i++;
+	}
+	ft_memdel((void **)&(map->grid));
+	ft_memdel((void **)&map);
+}
+
+void	print_map(t_map *map)
+{
+	int i;
+
+	i = 0;
+	while (i < map->size)
+	{
+		ft_putendl(map->grid[i]);
+		i++;
+	}
+}
+
+t_map	*new_map(int size)
+{
+	t_map	*map;
+	int		i;
+	int		j;
+
+	map = (t_map *)ft_memalloc(sizeof(t_map));
+	map->size = size;
+	map->grid = (char **)ft_memalloc(sizeof(char *) * size);
+	i = 0;
+	while (i < size)
+	{
+		map->grid[i] = ft_strnew(size);
+		j = 0;
+		while (j < size)
+		{
+			map->grid[i][j] = '.';
+			j++;
+		}
+		i++;
+	}
+	return (map);
+}
+
+int			redundant_move(t_list **list, t_tet *tetri, int x, int y)
+{
+	t_list	*link;
+	t_tet	*temp;
+	// int 	found;
+	int 	ret;
+	int		match;
+
+	ret = 1;
+	match = 0;
+	//link = ft_lstrev(list);
+	print_list(*list);
+	link = *list;
+	while (link)
+	{
+		temp = (t_tet *)(link->content);
+		// if (found)
+		if (temp->val < tetri->val)
+		{
+			if ( temp->height == tetri->height && temp->width == tetri->width
+				&& (ft_tabcmp(tetri->tab, temp->tab, temp->height)))
+			{
+				match = 1;
+				ft_putendl("Registering equal tertris");
+				if (temp->y < y || (temp->y == y && temp->x < x))
+				{
+					ret = 0;
+					break ;
+				}
+			}
+		}
+		// }
+		// if (temp->val == tetri->val)
+		// 	found = 1;
+		link = link->next;
+		ft_putendl("Call next link");
+	}
+	ft_lstrev(list);
+	if (match)
+		return (ret);
+	return (0);
+}
+// int		redundant_move(t_list **list, t_tet *tetri, t_vec *depth)
+// {
+// 	t_list	*link;
+// 	t_tet	*temp;
+// 	t_vec	*dist;
+
+// 	link = *list;
+// 	while (link)
+// 	{
+// 		temp = (t_tet *)(link->content);
+// 		if (!(temp->val < tetri->val))
+// 			return (0) ;
+// 		if ( temp->height == tetri->height && (ft_tabcmp(tetri->tab, temp->tab, temp->height)))
+// 		{
+// 			dist = (t_vec *)(temp->dist);
+// 			// ft_putnbr(dist->y);
+// 			// ft_putchar('\n');
+// 			// ft_putnbr(dist->x);
+// 			// ft_putchar('\n');
+// 			if (dist->y == 0 && dist->x == 0)
+// 			{
+// 				ft_memdel((void **)&depth);
+// 				return (0);
+// 			}
+// 			else if (dist->y < depth->y || (dist->y == depth->y && dist->x > depth->x))
+// 			{
+// 				ft_memdel((void **)&depth);
+// 				return (0);
+// 			}
+// 		}
+		
+// 		link = link->next;
+// 	}
+// 	ft_memdel((void **)&depth);
+// 	return (1);
+// }
+
+void	alter_map(t_tet *tetri, t_map *map, t_vec *pos, char c)
+{
+	int	i;
+	int	j;
+	// int z;
+
+	// z = 0;
+	// while (tetri->tab[0][z] != tetri->val)
+	// 	z++;
+	// if (pos->x >= z)
+	// 	pos->x -= z;
+
+	j = 0;
+	while (j < tetri->height)
+	{
+		i = 0;
+		while (i < tetri->width)
+		{
+			if (tetri->tab[j][i] == '#')
+			{
+				map->grid[pos->y + j][pos->x + i] = c;
+			}
+			i++;
+		}
+		j++;
+	}
+	ft_memdel((void **)&pos);
+	print_map(map);
+	usleep(20000);
+}
+
+int		evaluate_position(t_tet *tetri, t_map *map, int x, int y)
+{
+	int	i;
+	int	j;
+	// int z;
+
+	// z = 0;
+	// while (tetri->tab[0][z] != tetri->val)
+	// 	z++;
+	// if (x >= z)
+	// 	x -= z;
+	j = 0;
+	while (j < tetri->height)
+	{
+		i = 0;
+		while(i < tetri->width)
+		{
+			if (tetri->tab[j][i] == '#' && map->grid[y + j][x + i] != '.')
+				return (0);
+			i++;
+		}
+		j++;
+	}
+	tetri->y = y;
+	tetri->x = x;
+	alter_map(tetri, map, new_vector(x, y), tetri->val);
+	return (1);
+}
+
+int		solve_map(t_map *map, t_list *list)
+{
+	int	i;
+	int	j;
+	t_tet	*tetri;
+
+	if (list == NULL)
+		return (1);
+	tetri = (t_tet *)(list->content);
+	j = 0;
+	while (j < map->size - tetri->height + 1)
+	{
+		i = 0;
+		while (i < map->size - tetri->width + 1)
+		{
+			if (!(redundant_move(&list, tetri, i, j)) 
+				&& evaluate_position(tetri, map, i, j))
+			{
+				if (solve_map(map, list->next))
+					return (1);
+				else
+					alter_map(tetri, map, new_vector(i, j), '.');
+			}
+			i++;
+		}
+		j++;
+	}
+	// ft_putnbr(map->size);
+	// ft_putchar('\n');
+	return (0);
+}
+
+int		sqrt_ceiling(int n)
+{
+	int		size;
+	size = 2;
+	while(size * size < n)
+		size++;
+	return (size);
+}
+
+t_map	*init_solver(t_list *list)
+{
+	t_map	*map;
+	int		size;
+
+	int cnt = ft_lstcount(list);
+	ft_putnbr(cnt);
+	ft_putchar('\n');
+	size = sqrt_ceiling(cnt * 4);
+	map = new_map(size);
+	while (!solve_map(map, list))
+	{
+		size++;
+		free_map(map);
+		map = new_map(size);
+	}
+	return (map);
+}
+
+// //this is here for debugging purposes only
+void	print_list(t_list *list)
 {
 	ft_putendl("In print list");
 	t_list	*link;
 	t_tet	*temp;
 	int		i;
 
-	link = *list;
+	link = list;
 	while (link != NULL)
 	{
-		temp = link->content;
+		temp = (t_tet *)(link->content);
 		i = 0;
 		while (i < temp->height)
 		{
@@ -41,11 +363,14 @@ t_tet	*new_tetri(char **pos, int w, int h, char c)
 {
 	t_tet	*tetri;
 
+
 	tetri = ft_memalloc(sizeof(t_tet));
 	tetri->tab = pos;
 	tetri->width = w;
 	tetri->height = h;
 	tetri->val = c;
+	tetri->x = 0;
+	tetri->y = 0;
 	return (tetri);
 }
 
@@ -63,7 +388,7 @@ t_vec	*new_vector(int x, int y)
 
 
 //determines the limits of tetri - smallest x and y value and largest x and y value
-void	get_limits(char *str, t_vec *min, t_vec *max, char c)
+void	get_limits(char *str, t_vec *min, t_vec *max)
 {
 	int i;
 
@@ -74,7 +399,7 @@ void	get_limits(char *str, t_vec *min, t_vec *max, char c)
 		if (str[i] == '#')
 		{
 			//change the char from # to alpha value
-			str[i] = c;
+			//str[i] = c;
 			//if index in line is less than min x value, change it
 			if (i % 5 < min->x)
 				min->x = i % 5;
@@ -106,7 +431,7 @@ t_tet	*get_tetri(char *str, char c)
 	//create max vector - init to smallest extreme
 	max = new_vector(0, 0);
 
-	get_limits(str, min, max, c);
+	get_limits(str, min, max);
 	pos = ft_memalloc(sizeof(char *) * (max->y - min->y + 1));//amount of strings = tetri height
 	i = 0;
 	while (i < max->y - min->y + 1)
@@ -213,12 +538,15 @@ t_list	*read_source(int fd)
 		{
 			//ft_memdel((void **)&buf);
 			//free list
-			ft_putnbr(errnum);
+			//ft_putnbr(errnum);
 			ft_putendl("\nFailed if");
 			return (NULL);
 		}
 		c++;
+		if (c > 'Z')
+			return (NULL);
 		ft_lstadd(&list, ft_lstnew(tetri, sizeof(t_tet)));
+		
 		//free tetris ??
 	}
 	//ft_memdel((void **)&buf);
@@ -227,6 +555,7 @@ t_list	*read_source(int fd)
 		//free list
 		return (NULL);
 	}
+	ft_lstrev(&list);
 	return (list);
 
 }
@@ -235,6 +564,7 @@ int		main(int argc, char **argv)
 {
 	int		fd;
 	t_list	*list;
+	t_map	*map;
 
 	//Only accept one arguement
 	if (argc != 2)
@@ -248,6 +578,14 @@ int		main(int argc, char **argv)
 		return (0);
 	}
 	ft_putendl("going to read source");
-	list = read_source(fd);
-	print_list(&list);
+	if (!(list = read_source(fd)))
+	{
+		ft_putendl("List is NULL");
+		return (0);
+	}
+	map = init_solver(list);
+	print_map(map);
+	return (0);
 }
+
+

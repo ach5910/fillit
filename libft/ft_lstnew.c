@@ -6,7 +6,7 @@
 /*   By: ahunt <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/28 02:05:09 by ahunt             #+#    #+#             */
-/*   Updated: 2016/10/04 20:06:34 by ahunt            ###   ########.fr       */
+/*   Updated: 2016/10/06 03:32:17 by ahunt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_list	*ft_lstnew(void const *content, size_t content_size)
 {
 	t_list	*link;
 
-	if (!(link = (t_list *)malloc(sizeof(*link))))
+	if (!(link = (t_list *)malloc(sizeof(t_list))))
 		return (NULL);
 	if (content == NULL)
 	{
