@@ -13,6 +13,7 @@
 #include "libft.h"
 #include "fillit.h"
 
+//this is here for debugging purposes only
 void	print_list(t_list **list)
 {
 	ft_putendl("In print list");
@@ -34,6 +35,8 @@ void	print_list(t_list **list)
 	}
 }
 
+
+//mallocs and creates new tetri
 t_tet	*new_tetri(char **pos, int w, int h, char c)
 {
 	t_tet	*tetri;
@@ -46,6 +49,8 @@ t_tet	*new_tetri(char **pos, int w, int h, char c)
 	return (tetri);
 }
 
+//mallocs and creates new vector. Vectors will be used to identify locations on grid w/o 
+//having to continually pass two parameters 
 t_vec	*new_vector(int x, int y)
 {
 	t_vec *vector;
@@ -56,6 +61,8 @@ t_vec	*new_vector(int x, int y)
 	return (vector);
 }
 
+
+//determines the limits of tetri - smallest x and y value and largest x and y value
 void	get_limits(char *str, t_vec *min, t_vec *max, char c)
 {
 	int i;
@@ -63,15 +70,21 @@ void	get_limits(char *str, t_vec *min, t_vec *max, char c)
 	i = 0;
 	while (str[i])
 	{
+		//for each block
 		if (str[i] == '#')
 		{
+			//change the char from # to alpha value
 			str[i] = c;
+			//if index in line is less than min x value, change it
 			if (i % 5 < min->x)
 				min->x = i % 5;
+			//if index in line is greater that max x, change it
 			if (i % 5 > max->x)
 				max->x = i % 5;
+			//if line number is less than min y, change it
 			if (i / 5 < min->y)
 				min->y = i / 5;
+			//if line number is greater than max y, change it
 			if (i / 5 > max->y)
 				max->y = i / 5;
 		}
@@ -79,6 +92,7 @@ void	get_limits(char *str, t_vec *min, t_vec *max, char c)
 	}
 }
 
+//gets the tetri struct
 t_tet	*get_tetri(char *str, char c)
 {
 	t_vec	*min;
@@ -87,15 +101,19 @@ t_tet	*get_tetri(char *str, char c)
 	char	**pos;
 	int		i;
 
+	//create min vector - init to largest extreme
 	min = new_vector(3, 3);
+	//create max vector - init to smallest extreme
 	max = new_vector(0, 0);
 
 	get_limits(str, min, max, c);
-	pos = ft_memalloc(sizeof(char *) * (max->y - min->y + 1));
+	pos = ft_memalloc(sizeof(char *) * (max->y - min->y + 1));//amount of strings = tetri height
 	i = 0;
 	while (i < max->y - min->y + 1)
 	{
+		//size is = to tetri width 
 		pos[i] = ft_strnew(max->x - min->x + 1);
+		//get each line   ptr + min x value + ( index + min height ) * 5(number of chars per line) 
 		ft_strncpy(pos[i], (str + min->x + (i + min->y) * 5), (max->x - min->x + 1));
 		i++;
 	}
@@ -110,6 +128,7 @@ t_tet	*get_tetri(char *str, char c)
 	return (tetri);
 }
 
+//checks to make sure that all the blocks are touching other blocks
 int		block_continuity(char *str)
 {
 	int i;
@@ -121,22 +140,29 @@ int		block_continuity(char *str)
 	{
 		if (str[i] == '#')
 		{
+			//check left of block
 			if (i > 0 && str[i - 1] == '#')
 				cont++;
+			//check right of block
 			if (i < 20 && str[i + 1] == '#')
 				cont++;
+			//check above block(visually)...empirically below
 			if (i > 4 && str[i - 5] == '#')
 				cont++;
+			//check below block ''  ''  ''
 			if (i < 15 && str[i + 5] == '#')
 				cont++;
 		}
 		i++;
 	}
+	//All tetri have a conection count of 6, except for the square which has 8
 	if (cont == 6 || cont == 8)
 		return (1);
 	return (0);
 }
 
+
+//Makes sure the inputed tet is valid
 int		is_valid_input(char *str, int size_read)
 {
 	int i;
@@ -144,18 +170,22 @@ int		is_valid_input(char *str, int size_read)
 
 	i = 0;
 	blocks = 0;
+	//if not last tetri then it needs to be followed by a new line
 	if (size_read == 21 && str[20] != '\n')
 		return (0);
 	while (i < 20)
 	{
+		//if index is part of the grid. ex i= 0 thru 3 are part of tetri grid
 		if (i % 5 < 4)
 		{
+			//invalid char in grid
 			if (str[i] != '.' && str[i] != '#')
 				return (0);
+			//too many blocks in tetri
 			if (str[i] == '#' && ++blocks > 4)
 				return (0);
 		}
-		else if (str[i] != '\n')
+		else if (str[i] != '\n')//when index mod 5 == 4 it should be  newline char
 			return(0);
 		i++;
 	}
@@ -164,21 +194,22 @@ int		is_valid_input(char *str, int size_read)
 	return (1);
 }
 
+//reads the source file and call functions to 
 t_list	*read_source(int fd)
 {
-	char	*buf;
-	int		size_read;
+	char	*buf;		//Write into buf from file
+	int		size_read;  //Number of bytes read in 
 	t_tet	*tetri;
 	t_list	*list;
 	char	c;
-	int errnum;
+//	int errnum;
 
-	buf = ft_strnew(21);
+	buf = ft_strnew(21);//21 because 4 * 4 grid w/ newline at each line and newline after
 	list = NULL;
 	c = 'A';
-	while ((size_read = read(fd, buf, 21)) >= 20)
+	while ((size_read = read(fd, buf, 21)) >= 20)//The last tetrimino will be 20 bytes cuz no newline after
 	{
-		if (!(errnum = is_valid_input(buf, size_read)) || (tetri = get_tetri(buf, c)) == NULL)
+		if (!(is_valid_input(buf, size_read)) || (tetri = get_tetri(buf, c)) == NULL)
 		{
 			//ft_memdel((void **)&buf);
 			//free list
@@ -205,11 +236,12 @@ int		main(int argc, char **argv)
 	int		fd;
 	t_list	*list;
 
+	//Only accept one arguement
 	if (argc != 2)
 	{
 		ft_putendl("usage: ./fillit tetrimino_source_file");
 		return (0);
-	}
+	}//open the file passed in 
 	if ((fd = open(argv[1], O_RDONLY, 0600)) == -1)
 	{
 		ft_putendl("File wouldn't open");
