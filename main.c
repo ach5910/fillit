@@ -13,6 +13,48 @@
 #include "libft.h"
 #include "fillit.h"
 
+void	print_list(t_list **list)
+{
+	t_list	*link;
+	t_tet	*temp;
+	int		i;
+
+	link = *list;
+	while (link != NULL)
+	{
+		temp = link->content;
+		i = 0;
+		while (temp->tab[i])
+		{
+			ft_putstr(temp->tab[i]);
+			i++;
+		}
+		link = link->next;
+	}
+}
+
+t_tet	*new_tetri(char **pos, int w, int h, char c)
+{
+	t_tet	*tetri;
+
+	tetri = ft_memalloc(sizeof(t_tet));
+	tetri->tab = pos;
+	tetri->width = w;
+	tetri->height = h;
+	tetri->val = c;
+	return (tetri);
+}
+
+t_vec	*new_vector(int x, int y)
+{
+	t_vec *vector;
+
+	vector = ft_memalloc(sizeof(t_vec));
+	vector->x = x;
+	vector->y = y;
+	return (vector);
+}
+
 void	get_limits(char *str, t_vec min, t_vec max)
 {
 	int i;
