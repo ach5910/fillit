@@ -6,7 +6,7 @@
 /*   By: ahunt <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/05 15:57:16 by ahunt             #+#    #+#             */
-/*   Updated: 2016/10/05 15:57:25 by ahunt            ###   ########.fr       */
+/*   Updated: 2016/10/06 14:51:57 by ahunt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,44 +136,51 @@ t_map	*new_map(int size)
 	return (map);
 }
 
-int			redundant_move(t_list **list, t_tet *tetri, int x, int y)
+int			redundant_move(t_tet *tetri, int x, int y)
 {
 	t_list	*link;
 	t_tet	*temp;
-	// int 	found;
 	int 	ret;
 	int		match;
 
 	ret = 1;
 	match = 0;
 	//link = ft_lstrev(list);
-	print_list(*list);
-	link = *list;
+	//print_list(g_list);
+	link = g_list;
 	while (link)
 	{
 		temp = (t_tet *)(link->content);
 		// if (found)
 		if (temp->val < tetri->val)
 		{
+			// ft_putendl(&temp->val);
+			// ft_putendl(&tetri->val);
 			if ( temp->height == tetri->height && temp->width == tetri->width
 				&& (ft_tabcmp(tetri->tab, temp->tab, temp->height)))
 			{
 				match = 1;
-				ft_putendl("Registering equal tertris");
 				if (temp->y < y || (temp->y == y && temp->x < x))
 				{
+					// ft_putnbr(temp->y);
+					// ft_putchar('\n');
+					// ft_putnbr(y);
+					// ft_putchar('\n');
+					// ft_putnbr(temp->x);
+					// ft_putchar('\n');
+					// ft_putnbr(x);
+					// ft_putchar('\n');
+					// ft_putendl("Match found");
 					ret = 0;
-					break ;
 				}
+				break ;
 			}
 		}
 		// }
 		// if (temp->val == tetri->val)
 		// 	found = 1;
 		link = link->next;
-		ft_putendl("Call next link");
 	}
-	ft_lstrev(list);
 	if (match)
 		return (ret);
 	return (0);
@@ -242,21 +249,39 @@ void	alter_map(t_tet *tetri, t_map *map, t_vec *pos, char c)
 		j++;
 	}
 	ft_memdel((void **)&pos);
-	print_map(map);
-	usleep(20000);
+	// if (++g_cnt == 15)
+	// {
+	// 	print_map(map);
+	// 	ft_putchar('\n');
+	// 	usleep(10000);
+	// 	g_cnt = 0;
+	// }
+}
+
+void	update_glst(char c, int x, int y)
+{
+	t_list	*link;
+	t_tet	*tetri;
+
+	link = g_list;
+	while (link)
+	{
+		tetri = (t_tet *)(link->content);
+		if (tetri->val == c)
+		{
+			tetri->y = y;
+			tetri->x = x;
+			break ;
+		}
+		link = link->next;
+	}
 }
 
 int		evaluate_position(t_tet *tetri, t_map *map, int x, int y)
 {
 	int	i;
 	int	j;
-	// int z;
-
-	// z = 0;
-	// while (tetri->tab[0][z] != tetri->val)
-	// 	z++;
-	// if (x >= z)
-	// 	x -= z;
+	
 	j = 0;
 	while (j < tetri->height)
 	{
@@ -269,8 +294,11 @@ int		evaluate_position(t_tet *tetri, t_map *map, int x, int y)
 		}
 		j++;
 	}
+	if (redundant_move(tetri, x, y) == 1)
+		return (0);
 	tetri->y = y;
 	tetri->x = x;
+	update_glst(tetri->val, x, y);
 	alter_map(tetri, map, new_vector(x, y), tetri->val);
 	return (1);
 }
@@ -290,8 +318,7 @@ int		solve_map(t_map *map, t_list *list)
 		i = 0;
 		while (i < map->size - tetri->width + 1)
 		{
-			if (!(redundant_move(&list, tetri, i, j)) 
-				&& evaluate_position(tetri, map, i, j))
+			if (evaluate_position(tetri, map, i, j))
 			{
 				if (solve_map(map, list->next))
 					return (1);
@@ -302,8 +329,6 @@ int		solve_map(t_map *map, t_list *list)
 		}
 		j++;
 	}
-	// ft_putnbr(map->size);
-	// ft_putchar('\n');
 	return (0);
 }
 
@@ -321,10 +346,9 @@ t_map	*init_solver(t_list *list)
 	t_map	*map;
 	int		size;
 
+
 	int cnt = ft_lstcount(list);
-	ft_putnbr(cnt);
-	ft_putchar('\n');
-	size = sqrt_ceiling(cnt * 4);
+	size = sqrt_ceiling(cnt * 4);//if non solid / tot = 87.5%, 69%
 	map = new_map(size);
 	while (!solve_map(map, list))
 	{
@@ -546,7 +570,7 @@ t_list	*read_source(int fd)
 		if (c > 'Z')
 			return (NULL);
 		ft_lstadd(&list, ft_lstnew(tetri, sizeof(t_tet)));
-		
+		ft_lstadd(&g_list, ft_lstnew(tetri, sizeof(t_tet)));	
 		//free tetris ??
 	}
 	//ft_memdel((void **)&buf);

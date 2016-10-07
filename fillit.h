@@ -6,7 +6,7 @@
 /*   By: ahunt <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/04 20:10:24 by ahunt             #+#    #+#             */
-/*   Updated: 2016/10/06 08:23:27 by ahunt            ###   ########.fr       */
+/*   Updated: 2016/10/06 18:19:34 by ahunt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,10 @@ typedef struct			s_tet
 	int			x;
 	int			y;
 }						t_tet;
+
+t_list	*g_list;
+int		g_cnt = 0;
+int		g_time;
 
 int		main(int argc, char **argv);
 t_list	*read_source(int fd);
