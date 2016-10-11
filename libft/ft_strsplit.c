@@ -6,7 +6,7 @@
 /*   By: ahunt <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/24 17:54:25 by ahunt             #+#    #+#             */
-/*   Updated: 2016/10/04 19:57:47 by ahunt            ###   ########.fr       */
+/*   Updated: 2016/10/11 09:38:06 by ahunt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static int	ft_get_word(char **words, char *s, int c)
 	}
 	else
 	{
-		*words = strdup(s);
+		*words = ft_strdup(s);
 		len = ft_strlen(s);
 	}
 	return (len);

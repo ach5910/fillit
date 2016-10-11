@@ -6,7 +6,7 @@
 /*   By: ahunt <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/24 14:59:16 by ahunt             #+#    #+#             */
-/*   Updated: 2016/09/29 15:26:10 by ahunt            ###   ########.fr       */
+/*   Updated: 2016/10/11 09:38:29 by ahunt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char	*ft_strtrim(char const *s)
 	trim = (char *)malloc(sizeof(char) * (i + 1));
 	if (trim == NULL)
 		return (NULL);
-	strncpy(trim, s, i);
+	ft_strncpy(trim, s, i);
 	trim[i] = '\0';
 	return (trim);
 }
