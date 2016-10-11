@@ -6,7 +6,7 @@
 #    By: ahunt <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/10/11 02:04:20 by ahunt             #+#    #+#              #
-#    Updated: 2016/10/11 04:38:47 by ahunt            ###   ########.fr        #
+#    Updated: 2016/10/11 04:59:49 by ahunt            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,7 @@ $(LIB):
 	make -C $(LIB_PATH)
 
 $(NAME): $(OBJS)
-	$(CC) $(LIB_LINK) -o $(NAME) $(OBJS)
+	$(CC) $(LIB_LINK) -o $@ $^
 
 clean:
 	rm -rf $(OBJ_DIR)
@@ -58,3 +58,5 @@ fclean: clean
 	make -C $(LIB_PATH) fclean
 
 re: fclean all
+
+.PHONY: all clean fclean re
