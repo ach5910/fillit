@@ -202,13 +202,6 @@ void	alter_map(t_tet *tetri, t_map *map, t_vec *pos, char c)
 {
 	int	i;
 	int	j;
-	// int z;
-
-	// z = 0;
-	// while (tetri->tab[0][z] != tetri->val)
-	// 	z++;
-	// if (pos->x >= z)
-	// 	pos->x -= z;
 
 	j = 0;
 	while (j < tetri->height)
@@ -225,13 +218,6 @@ void	alter_map(t_tet *tetri, t_map *map, t_vec *pos, char c)
 		j++;
 	}
 	ft_memdel((void **)&pos);
-	// if (++g_cnt == 15)
-	// {
-	// 	print_map(map);
-	// 	ft_putchar('\n');
-	// 	usleep(10000);
-	// 	g_cnt = 0;
-	// }
 }
 
 void	update_glst(char c, int x, int y)
@@ -338,7 +324,6 @@ t_map	*init_solver(t_list *list)
 // //this is here for debugging purposes only
 void	print_list(t_list *list)
 {
-	ft_putendl("In print list");
 	t_list	*link;
 	t_tet	*temp;
 	int		i;
@@ -426,30 +411,20 @@ t_tet	*get_tetri(char *str, char c)
 	char	**pos;
 	int		i;
 
-	//create min vector - init to largest extreme
 	min = new_vector(3, 3);
-	//create max vector - init to smallest extreme
 	max = new_vector(0, 0);
-
 	get_limits(str, min, max);
-	pos = ft_memalloc(sizeof(char *) * (max->y - min->y + 1));//amount of strings = tetri height
+	pos = ft_memalloc(sizeof(char *) * (max->y - min->y + 1));
 	i = 0;
 	while (i < max->y - min->y + 1)
 	{
-		//size is = to tetri width 
 		pos[i] = ft_strnew(max->x - min->x + 1);
-		//get each line   ptr + min x value + ( index + min height ) * 5(number of chars per line) 
 		ft_strncpy(pos[i], (str + min->x + (i + min->y) * 5), (max->x - min->x + 1));
 		i++;
 	}
-	// i = 0;
-	// while (i < max->y - min->y + 1)
-	// {
-	// 	ft_putendl(pos[i]);
-	// 	i++;
-	// }
 	tetri = new_tetri(pos, max->x - min->x + 1, max->y - min->y + 1, c);
-	//free min and max
+	ft_memdel((void **)&min);
+	ft_memdel((void **)&max);
 	return (tetri);
 }
 
