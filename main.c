@@ -440,22 +440,17 @@ int		block_continuity(char *str)
 	{
 		if (str[i] == '#')
 		{
-			//check left of block
 			if (i > 0 && str[i - 1] == '#')
 				cont++;
-			//check right of block
 			if (i < 20 && str[i + 1] == '#')
 				cont++;
-			//check above block(visually)...empirically below
 			if (i > 4 && str[i - 5] == '#')
 				cont++;
-			//check below block ''  ''  ''
 			if (i < 15 && str[i + 5] == '#')
 				cont++;
 		}
 		i++;
 	}
-	//All tetri have a conection count of 6, except for the square which has 8
 	if (cont == 6 || cont == 8)
 		return (1);
 	return (0);
@@ -470,22 +465,18 @@ int		is_valid_input(char *str, int size_read)
 
 	i = 0;
 	blocks = 0;
-	//if not last tetri then it needs to be followed by a new line
 	if (size_read == 21 && str[20] != '\n')
 		return (0);
 	while (i < 20)
 	{
-		//if index is part of the grid. ex i= 0 thru 3 are part of tetri grid
 		if (i % 5 < 4)
 		{
-			//invalid char in grid
 			if (str[i] != '.' && str[i] != '#')
 				return (0);
-			//too many blocks in tetri
 			if (str[i] == '#' && ++blocks > 4)
 				return (0);
 		}
-		else if (str[i] != '\n')//when index mod 5 == 4 it should be  newline char
+		else if (str[i] != '\n')
 			return(0);
 		i++;
 	}
@@ -502,37 +493,22 @@ t_list	*read_source(int fd)
 	t_tet	*tetri;
 	t_list	*list;
 	char	c;
-//	int errnum;
 
-	buf = ft_strnew(21);//21 because 4 * 4 grid w/ newline at each line and newline after
+	buf = ft_strnew(21);
 	list = NULL;
 	c = 'A';
-	while ((size_read = read(fd, buf, 21)) >= 20)//The last tetrimino will be 20 bytes cuz no newline after
+	while ((size_read = read(fd, buf, 21)) >= 20)
 	{
-		if (!(is_valid_input(buf, size_read)) || (tetri = get_tetri(buf, c)) == NULL)
-		{
-			//ft_memdel((void **)&buf);
-			//free list
-			//ft_putnbr(errnum);
-			ft_putendl("\nFailed if");
-			return (NULL);
-		}
-		c++;
-		if (c > 'Z')
-			return (NULL);
+		if (!(is_valid_input(buf, size_read)) || (tetri = get_tetri(buf, c)) == NULL || ++c > 'Z')
+			return (free_list(list));
 		ft_lstadd(&list, ft_lstnew(tetri, sizeof(t_tet)));
-		ft_lstadd(&g_list, ft_lstnew(tetri, sizeof(t_tet)));	
-		//free tetris ??
+		ft_lstadd(&g_list, ft_lstnew(tetri, sizeof(t_tet)));
 	}
-	//ft_memdel((void **)&buf);
+	ft_strdel(&buf);
 	if (size_read != 0)
-	{
-		//free list
-		return (NULL);
-	}
+		return(free_list(list));
 	ft_lstrev(&list);
 	return (list);
-
 }
 
 int		main(int argc, char **argv)
