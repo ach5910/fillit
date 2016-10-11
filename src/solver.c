@@ -17,9 +17,8 @@ t_map	*init_solver(t_list *list)
 	t_map	*map;
 	int		size;
 
-
 	int cnt = ft_lstcount(list);
-	size = sqrt_ceiling(cnt * 4);//if non solid / tot = 87.5%, 69%
+	size = sqrt_ceiling(cnt * 4);
 	map = new_map(size);
 	while (!solve_map(map, list))
 	{
@@ -32,8 +31,8 @@ t_map	*init_solver(t_list *list)
 
 int		solve_map(t_map *map, t_list *list)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 	t_tet	*tetri;
 
 	if (list == NULL)

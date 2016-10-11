@@ -12,7 +12,6 @@
 
 #include "fillit.h"
 
-//determines the limits of tetri - smallest x and y value and largest x and y value
 void	get_limits(char *str, t_vec *min, t_vec *max)
 {
 	int i;
@@ -20,21 +19,14 @@ void	get_limits(char *str, t_vec *min, t_vec *max)
 	i = 0;
 	while (str[i])
 	{
-		//for each block
 		if (str[i] == '#')
 		{
-			//change the char from # to alpha value
-			//str[i] = c;
-			//if index in line is less than min x value, change it
 			if (i % 5 < min->x)
 				min->x = i % 5;
-			//if index in line is greater that max x, change it
 			if (i % 5 > max->x)
 				max->x = i % 5;
-			//if line number is less than min y, change it
 			if (i / 5 < min->y)
 				min->y = i / 5;
-			//if line number is greater than max y, change it
 			if (i / 5 > max->y)
 				max->y = i / 5;
 		}
@@ -42,7 +34,6 @@ void	get_limits(char *str, t_vec *min, t_vec *max)
 	}
 }
 
-//gets the tetri struct
 t_tet	*get_tetri(char *str, char c)
 {
 	t_vec	*min;
@@ -68,7 +59,6 @@ t_tet	*get_tetri(char *str, char c)
 	return (tetri);
 }
 
-//checks to make sure that all the blocks are touching other blocks
 int		block_continuity(char *str)
 {
 	int i;
@@ -96,8 +86,6 @@ int		block_continuity(char *str)
 	return (0);
 }
 
-
-//Makes sure the inputed tet is valid
 int		is_valid_input(char *str, int size_read)
 {
 	int i;

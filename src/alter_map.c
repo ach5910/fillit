@@ -21,7 +21,7 @@ int		evaluate_position(t_tet *tetri, t_map *map, int x, int y)
 	while (j < tetri->height)
 	{
 		i = 0;
-		while(i < tetri->width)
+		while (i < tetri->width)
 		{
 			if (tetri->tab[j][i] == '#' && map->grid[y + j][x + i] != '.')
 				return (0);
@@ -60,7 +60,7 @@ void	alter_map(t_tet *tetri, t_map *map, t_vec *pos, char c)
 	ft_memdel((void **)&pos);
 }
 
-int			redundant_move(t_tet *tetri, int x, int y)
+int		redundant_move(t_tet *tetri, int x, int y)
 {
 	t_list	*link;
 	t_tet	*temp;
@@ -73,7 +73,7 @@ int			redundant_move(t_tet *tetri, int x, int y)
 		temp = (t_tet *)(link->content);
 		if (temp->val < tetri->val)
 		{
-			if ( temp->height == tetri->height && temp->width == tetri->width
+			if (temp->height == tetri->height && temp->width == tetri->width
 				&& (ft_tabcmp(tetri->tab, temp->tab, temp->height)))
 			{
 				match = 1;

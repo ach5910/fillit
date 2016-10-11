@@ -6,7 +6,7 @@
 /*   By: ahunt <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/11 01:21:31 by ahunt             #+#    #+#             */
-/*   Updated: 2016/10/11 01:21:48 by ahunt            ###   ########.fr       */
+/*   Updated: 2016/10/11 04:31:59 by ahunt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,17 @@ t_vec	*new_vector(int x, int y)
 	return (vector);
 }
 
+void	ft_error(void)
+{
+	write(1, "error\n", 6);
+}
+
 int		sqrt_ceiling(int n)
 {
 	int		size;
+
 	size = 2;
-	while(size * size < n)
+	while (size * size < n)
 		size++;
 	return (size);
 }

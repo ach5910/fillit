@@ -6,7 +6,7 @@
 /*   By: ahunt <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/04 20:10:24 by ahunt             #+#    #+#             */
-/*   Updated: 2016/10/11 00:49:46 by ahunt            ###   ########.fr       */
+/*   Updated: 2016/10/11 04:32:59 by ahunt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct			s_tet
 t_list	*g_list;
 
 int		main(int argc, char **argv);
+void	ft_error(void);
 t_list	*ft_lstrev(t_list **list);
 int		ft_tabcmp(char **s1, char **s2, int height);
 void	free_tetri(t_tet *tetri);

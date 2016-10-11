@@ -14,8 +14,8 @@
 
 t_list	*read_source(int fd)
 {
-	char	*buf;		//Write into buf from file
-	int		size_read;  //Number of bytes read in 
+	char	*buf;
+	int		size_read;
 	t_tet	*tetri;
 	t_list	*list;
 	char	c;

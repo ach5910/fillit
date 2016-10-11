@@ -12,7 +12,6 @@
 
 #include "fillit.h"
 
-// //this is here for debugging purposes only
 void	print_list(t_list *list)
 {
 	t_list	*link;
@@ -49,12 +48,12 @@ t_list	*ft_lstrev(t_list **list)
 		current = next;
 	}
 	*list = prev;
-	return(*list);
+	return (*list);
 }
 
 int		ft_lstcount(t_list *list)
 {
-	if(list->next == NULL)
+	if (list->next == NULL)
 		return (1);
 	return (1 + ft_lstcount(list->next));
 }
