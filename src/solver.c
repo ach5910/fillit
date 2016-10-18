@@ -16,8 +16,9 @@ t_map	*init_solver(t_list *list)
 {
 	t_map	*map;
 	int		size;
+	int		cnt;
 
-	int cnt = ft_lstcount(list);
+	cnt = ft_lstcount(list);
 	size = sqrt_ceiling(cnt * 4);
 	map = new_map(size);
 	while (!solve_map(map, list))

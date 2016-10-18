@@ -25,7 +25,7 @@ t_list	*read_source(int fd)
 	c = 'A';
 	while ((size_read = read(fd, buf, 21)) >= 20)
 	{
-		if (!(is_valid_input(buf, size_read)) || 
+		if (!(is_valid_input(buf, size_read)) ||
 				(tetri = get_tetri(buf, c)) == NULL || ++c > 'Z')
 			return (free_list(list));
 		ft_lstadd(&list, ft_lstnew(tetri, sizeof(t_tet)));
@@ -33,7 +33,7 @@ t_list	*read_source(int fd)
 	}
 	ft_strdel(&buf);
 	if (size_read != 0)
-		return(free_list(list));
+		return (free_list(list));
 	ft_lstrev(&list);
 	return (list);
 }

@@ -6,17 +6,17 @@
 /*   By: ahunt <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/11 01:19:06 by ahunt             #+#    #+#             */
-/*   Updated: 2016/10/11 01:19:24 by ahunt            ###   ########.fr       */
+/*   Updated: 2016/10/18 02:42:02 by ahunt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include	"fillit.h"
+#include "fillit.h"
 
 int		evaluate_position(t_tet *tetri, t_map *map, int x, int y)
 {
 	int	i;
 	int	j;
-	
+
 	j = 0;
 	while (j < tetri->height)
 	{

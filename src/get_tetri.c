@@ -6,7 +6,7 @@
 /*   By: ahunt <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/11 00:50:51 by ahunt             #+#    #+#             */
-/*   Updated: 2016/10/11 00:51:05 by ahunt            ###   ########.fr       */
+/*   Updated: 2016/10/18 02:44:08 by ahunt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ t_tet	*get_tetri(char *str, char c)
 	while (i < max->y - min->y + 1)
 	{
 		pos[i] = ft_strnew(max->x - min->x + 1);
-		ft_strncpy(pos[i], (str + min->x + (i + min->y) * 5), (max->x - min->x + 1));
+		ft_strncpy(pos[i], (str + min->x + (i + min->y) * 5),
+				(max->x - min->x + 1));
 		i++;
 	}
 	tetri = new_tetri(pos, max->x - min->x + 1, max->y - min->y + 1, c);
@@ -105,7 +106,7 @@ int		is_valid_input(char *str, int size_read)
 				return (0);
 		}
 		else if (str[i] != '\n')
-			return(0);
+			return (0);
 		i++;
 	}
 	if (!block_continuity(str))

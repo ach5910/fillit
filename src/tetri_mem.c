@@ -16,7 +16,6 @@ t_tet	*new_tetri(char **pos, int w, int h, char c)
 {
 	t_tet	*tetri;
 
-
 	tetri = ft_memalloc(sizeof(t_tet));
 	tetri->tab = pos;
 	tetri->width = w;
